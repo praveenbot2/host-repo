@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events - Smart Health Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--serif-font-body, "Source Sans Pro", "Segoe UI", Arial, sans-serif);
+      min-height: 100vh;
+      color: #1A1A2E;
+      background: linear-gradient(135deg, rgba(5, 22, 48, 0.55) 0%, rgba(7, 51, 99, 0.32) 52%, rgba(8, 15, 36, 0.5) 100%), url('/static/images/new-module-bg.avif');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color-scheme: light;
+    }
+
+    .page {
+      max-width: 1360px;
+      margin: 22px auto;
+      padding: 0 18px 26px 100px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .title-wrap h1 {
+      font-size: 44px;
+      line-height: 1.2;
+      color: #2f3650;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .title-wrap p {
+      color: #60708b;
+      font-size: 24px;
+    }
+
+    .add-btn {
+      border: none;
+      color: #fff;
+      background: linear-gradient(135deg, #FF006E, #00D9FF);
+      border-radius: 14px;
+      padding: 18px 30px;
+      font-size: 32px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(255, 0, 110, 0.28);
+    }
+
+    .back-btn {
+      border: none;
+      color: #fff;
+      background: linear-gradient(135deg, #FF006E, #00D9FF);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      box-shadow: 0 8px 20px rgba(255, 0, 110, 0.24);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 2.3fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .events-main {
+      display: grid;
+      gap: 12px;
+    }
+
+    .events-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid #e6eaf6;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 22px rgba(59, 76, 126, 0.08);
+    }
+
+    .summary-label {
+      font-size: 12px;
+      color: #7a869a;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .summary-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2f3650;
+    }
+
+    .delivery-panel {
+      background: linear-gradient(135deg, rgba(255, 0, 110, 0.08), rgba(0, 217, 255, 0.08));
+      border: 1px solid rgba(255, 0, 110, 0.12);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 22px rgba(59, 76, 126, 0.08);
+    }
+
+    .delivery-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .delivery-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #30405f;
+    }
+
+    .delivery-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 6px 10px;
+      border: 1px solid transparent;
+      background: #fff;
+      color: #495a79;
+    }
+
+    .chip.success {
+      background: #e8fff4;
+      color: #116b43;
+      border-color: #b6f0cf;
+    }
+
+    .chip.warn {
+      background: #fff7e8;
+      color: #9a5a06;
+      border-color: #ffdca4;
+    }
+
+    .chip.neutral {
+      background: #f6f8ff;
+      color: #4d5d7e;
+      border-color: #e5ebff;
+    }
+
+    .delivery-message {
+      font-size: 13px;
+      color: #51617f;
+      line-height: 1.5;
+    }
+
+    .events-toolbar {
+      display: grid;
+      grid-template-columns: 1.2fr 0.7fr 0.7fr auto;
+      gap: 10px;
+      background: #fff;
+      border: 1px solid #e6eaf6;
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 10px 22px rgba(59, 76, 126, 0.08);
+    }
+
+    .events-toolbar input,
+    .events-toolbar select {
+      width: 100%;
+      border: 1px solid #d7dff0;
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #2f3650;
+      background: #fff;
+    }
+
+    .events-count {
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: #f6f8ff;
+      border: 1px solid #e5ebff;
+      color: #4d5d7e;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0 10px;
+      white-space: nowrap;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e6eaf6;
+      box-shadow: 0 12px 26px rgba(59, 76, 126, 0.08);
+      padding: 16px 16px 14px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .event-main {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .event-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      background: #ffe8d9;
+    }
+
+    .event-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #30384f;
+      margin-bottom: 4px;
+    }
+
+    .event-meta {
+      font-size: 13px;
+      color: #667792;
+      margin-bottom: 2px;
+    }
+
+    .check {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #31c58f;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .soon {
+      margin-top: 10px;
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #4d627f;
+      background: #ecf2f6;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-top: 1px solid #edf0f7;
+      padding-top: 10px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 9px;
+      padding: 8px 10px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn-edit { background: linear-gradient(135deg, #FF006E, #FF006E); }
+    .btn-delete { background: linear-gradient(135deg, #ff6d6d, #f55555); }
+
+    .sidebar {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e6eaf6;
+      box-shadow: 0 12px 26px rgba(59, 76, 126, 0.08);
+      padding: 14px;
+    }
+
+    .sidebar-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .sidebar-card {
+      border: 1px solid #e6eaf6;
+      border-radius: 14px;
+      padding: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+    }
+
+    .sidebar-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-card-head h4 {
+      font-size: 15px;
+      color: #31405f;
+    }
+
+    .sidebar-badge {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #ecf7ff;
+      color: #1767a6;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .center-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .center-metric {
+      border-radius: 12px;
+      padding: 10px 8px;
+      background: #f7f9ff;
+      border: 1px solid #e7ecfb;
+      text-align: center;
+    }
+
+    .center-metric .value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2f3650;
+      line-height: 1.1;
+    }
+
+    .center-metric .label {
+      font-size: 11px;
+      color: #7a869a;
+      margin-top: 3px;
+      font-weight: 600;
+    }
+
+    .agenda-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .agenda-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 10px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #e3e8f6;
+    }
+
+    .agenda-item .bullet {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 5px;
+      background: #7f75ef;
+      box-shadow: 0 0 0 4px rgba(127, 117, 239, 0.12);
+    }
+
+    .agenda-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #34425f;
+      margin-bottom: 2px;
+    }
+
+    .agenda-meta {
+      font-size: 12px;
+      color: #7a869a;
+      line-height: 1.45;
+    }
+
+    .quick-links {
+      display: grid;
+      gap: 8px;
+    }
+
+    .quick-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-decoration: none;
+      color: #2f3650;
+      background: #f8fbff;
+      border: 1px solid #e5ebff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .quick-link span:last-child {
+      color: #7f75ef;
+      font-weight: 700;
+    }
+
+    .calendar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .calendar-head h3 { font-size: 17px; color: #3b4663; }
+
+    .days, .dates {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      gap: 4px;
+    }
+
+    .days div {
+      color: #8a96ab;
+      font-size: 12px;
+      padding: 6px 0;
+    }
+
+    .dates button {
+      border: none;
+      background: transparent;
+      color: #65758f;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      margin: 0 auto;
+      font-size: 13px;
+    }
+
+    .dates button.today {
+      background: #7f75ef;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .dates button.muted { color: #b5bece; }
+
+    .upcoming-wrap {
+      margin-top: 14px;
+      background: #ecf2f6;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .upcoming-wrap h4 {
+      color: #4f607b;
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .up-item {
+      background: #fff;
+      border: 1px solid #e2e8f4;
+      border-radius: 10px;
+      padding: 9px;
+      margin-bottom: 8px;
+    }
+
+    .up-item:last-child { margin-bottom: 0; }
+
+    .up-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #35405c;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .up-meta { font-size: 12px; color: #7a869a; }
+
+    .icon-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      background: #ebe7ff;
+    }
+
+    .notify-wrap {
+      margin-top: 14px;
+      background: #ecf2f6;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .notify-wrap h4 {
+      color: #4f607b;
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .notify-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #e2e8f4;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #3f4a66;
+    }
+
+    .notify-item:last-of-type {
+      margin-bottom: 10px;
+    }
+
+    .notify-save-btn {
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      padding: 9px 10px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #FF006E, #FF006E);
+    }
+
+    .empty {
+      background: #fff;
+      border: 1px dashed #ced7ea;
+      color: #60708b;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      font-size: 13px;
+      grid-column: 1 / -1;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(14, 22, 41, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      padding: 16px;
+    }
+
+    .modal.show { display: flex; }
+
+    .modal-box {
+      width: 100%;
+      max-width: 540px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .close-btn {
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      cursor: pointer;
+      color: #6b7890;
+    }
+
+    .field { margin-bottom: 10px; }
+
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+      color: #576684;
+      font-weight: 500;
+    }
+
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid #d7dff0;
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #2f3650;
+    }
+
+    .field textarea { min-height: 76px; resize: vertical; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .muted-btn {
+      border: 1px solid #d6deee;
+      background: #fff;
+      color: #55627f;
+      border-radius: 9px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .save-btn {
+      border: none;
+      background: linear-gradient(135deg, #FF006E, #FF006E);
+      color: #fff;
+      border-radius: 9px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 40;
+      background: #1f2937;
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      display: none;
+      max-width: 320px;
+    }
+
+    .toast.show { display: block; }
+
+    @media (max-width: 1200px) {
+      .page { padding-left: 18px; }
+      body {
+        background: linear-gradient(135deg, rgba(5, 22, 48, 0.55) 0%, rgba(7, 51, 99, 0.32) 52%, rgba(8, 15, 36, 0.5) 100%), url('/static/images/new-module-bg.avif');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+      .title-wrap h1 { font-size: 32px; }
+      .title-wrap p { font-size: 18px; }
+      .add-btn { font-size: 24px; padding: 14px 20px; }
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .events-summary { grid-template-columns: 1fr; }
+      .events-toolbar { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+    }
+  
+        /* ===== REAL-TIME ANIMATIONS ===== */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 110, 0.3), 0 0 20px rgba(0, 217, 255, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(255, 0, 110, 0.6), 0 0 30px rgba(0, 217, 255, 0.4); }
+        }
+
+        @keyframes slide-in-top {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slide-in-bottom {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in-smooth {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes real-time-pulse {
+            0%, 100% { 
+                box-shadow: 0 0 8px rgba(255, 0, 110, 0.4), inset 0 0 8px rgba(0, 217, 255, 0.1);
+            }
+            50% { 
+                box-shadow: 0 0 16px rgba(255, 0, 110, 0.6), inset 0 0 12px rgba(0, 217, 255, 0.2);
+            }
+        }
+
+        @keyframes status-indicator {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Real-time enhanced styles */
+        .header {
+            animation: slide-in-top 0.6s ease-out;
+        }
+
+        .card, .alert-item, .event-card, .status-box, .metric-card {
+            animation: slide-in-bottom 0.5s ease-out backwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+
+        .status-badge {
+            animation: real-time-pulse 1.5s ease-in-out infinite;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: rgba(0, 217, 255, 0.15);
+            border: 1px solid #00D9FF;
+            color: #00D9FF;
+        }
+
+        .status-badge.alert {
+            background: rgba(255, 0, 110, 0.15);
+            border: 1px solid #FF006E;
+            color: #FF006E;
+        }
+
+        .status-badge.warning {
+            background: rgba(255, 165, 0, 0.15);
+            border: 1px solid #FFA500;
+            color: #FFA500;
+        }
+
+        .button-group button, button.action-btn {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-group button:hover, button.action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 0, 110, 0.3);
+        }
+
+        .button-group button:active, button.action-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Gradient backgrounds */
+        .gradient-card {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.05) 0%, rgba(0, 217, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 0, 110, 0.1);
+        }
+
+        .gradient-card:hover {
+            border-color: rgba(0, 217, 255, 0.3);
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.08) 0%, rgba(0, 217, 255, 0.08) 100%);
+        }
+
+        /* Real-time indicator dot */
+        .real-time-dot::before {
+            content: '●';
+            display: inline-block;
+            color: #00D9FF;
+            animation: status-indicator 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #FF006E !important;
+            box-shadow: 0 0 0 3px rgba(255, 0, 110, 0.1), 0 0 12px rgba(0, 217, 255, 0.2) !important;
+        }
+
+    </style>
+    <link rel="stylesheet" href="/static/css/serif-design-system.css">
+    <link rel="stylesheet" href="/static/css/advanced-design-system.css">
+    <link rel="stylesheet" href="/static/css/advanced-components.css">
+    <script defer src="/static/js/advanced-utilities.js"></script>
+</head>
+<body>
+  <main class="page">
+    <button class="back-btn" onclick="go('/dashboard')">← Back to Dashboard</button>
+
+    <section class="header">
+      <div class="title-wrap">
+        <h1>🗓️ Events</h1>
+        <p>Set reminders & schedule health activities</p>
+      </div>
+      <button class="add-btn" onclick="openCreateModal()">＋ Add Event</button>
+    </section>
+
+    <section class="layout">
+      <div class="events-main">
+        <div class="events-summary">
+          <div class="summary-card">
+            <div class="summary-label">Total Events</div>
+            <div class="summary-value" id="totalEvents">0</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Upcoming Reminders</div>
+            <div class="summary-value" id="upcomingEvents">0</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Delivery Status</div>
+            <div class="summary-value" id="deliveryStatus">Ready</div>
+          </div>
+        </div>
+
+        <div class="delivery-panel" id="deliveryPanel">
+          <div class="delivery-head">
+            <div class="delivery-title">Notification Delivery</div>
+            <div class="delivery-chips">
+              <span class="chip neutral" id="dashboardChip">Dashboard</span>
+              <span class="chip neutral" id="smsChip">SMS</span>
+            </div>
+          </div>
+          <div class="delivery-message" id="deliveryMessage">
+            Save an event to send an in-app dashboard alert and, when configured, an SMS notification.
+          </div>
+        </div>
+
+        <div class="events-toolbar">
+          <input id="eventSearch" type="text" placeholder="Search event title..." />
+          <select id="eventTypeFilter">
+            <option value="all">All Types</option>
+            <option value="yoga">Yoga</option>
+            <option value="steps">Steps</option>
+            <option value="fitness">Fitness</option>
+            <option value="meditation">Meditation</option>
+            <option value="wellness">Wellness</option>
+          </select>
+          <select id="eventStatusFilter">
+            <option value="all">All Status</option>
+            <option value="enabled">Enabled</option>
+            <option value="disabled">Disabled</option>
+          </select>
+          <div class="events-count" id="eventsCount">0 events</div>
+        </div>
+
+        <div id="cards" class="cards"></div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="sidebar-stack">
+          <div class="sidebar-card">
+            <div class="sidebar-card-head">
+              <h4>Event Center</h4>
+              <span class="sidebar-badge">Live</span>
+            </div>
+            <div class="center-metrics">
+              <div class="center-metric">
+                <div class="value" id="sidebarTotalEvents">0</div>
+                <div class="label">Events</div>
+              </div>
+              <div class="center-metric">
+                <div class="value" id="sidebarUpcomingCount">0</div>
+                <div class="label">Upcoming</div>
+              </div>
+              <div class="center-metric">
+                <div class="value" id="sidebarDeliveryCount">0</div>
+                <div class="label">Delivered</div>
+              </div>
+            </div>
+            <div class="agenda-list" id="todayAgenda"></div>
+          </div>
+
+          <div class="sidebar-card">
+            <div class="calendar-head">
+              <h3 id="calendarMonth">Month YYYY</h3>
+              <span style="color:#9aa7be; font-size:18px;">‹</span>
+            </div>
+            <div class="days">
+              <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <div id="calendarDates" class="dates"></div>
+          </div>
+
+          <div class="sidebar-card">
+            <div class="sidebar-card-head">
+              <h4>Quick Actions</h4>
+              <span class="sidebar-badge">Fast</span>
+            </div>
+            <div class="quick-links">
+              <a class="quick-link" href="#" onclick="openCreateModal(); return false;"><span>＋ Create Event</span><span>New</span></a>
+              <a class="quick-link" href="/dashboard"><span>↩ Dashboard</span><span>Home</span></a>
+              <a class="quick-link" href="/alerts"><span>🔔 View Alerts</span><span>Open</span></a>
+              <a class="quick-link" href="/api/events/reminders/upcoming?hours=168" target="_blank" rel="noreferrer"><span>⏱ Upcoming API</span><span>Live</span></a>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <div class="notify-wrap" style="margin-top:0; padding:0; background:transparent;">
+              <h4>Reminder Notifications</h4>
+              <div class="notify-item">
+                <span>Email notifications</span>
+                <input id="emailNotify" type="checkbox" />
+              </div>
+              <div class="notify-item">
+                <span>SMS reminders</span>
+                <input id="smsNotify" type="checkbox" />
+              </div>
+              <button class="notify-save-btn" onclick="saveNotificationSettings()">Save Notification Settings</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="eventModal" class="modal" aria-hidden="true">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="modalTitle" style="font-size:18px; color:#2f3650;">Add Event</h3>
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+
+      <form id="eventForm" onsubmit="saveEvent(event)">
+        <div class="field">
+          <label for="eventTitle">Title</label>
+          <input id="eventTitle" required maxlength="200" placeholder="Morning Yoga Session" />
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="eventType">Type</label>
+            <select id="eventType">
+              <option value="yoga">Yoga</option>
+              <option value="steps">Steps</option>
+              <option value="fitness">Fitness</option>
+              <option value="meditation">Meditation</option>
+              <option value="wellness">Wellness</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="eventRepeat">Repeat</label>
+            <select id="eventRepeat">
+              <option value="Daily">Daily</option>
+              <option value="Weekly">Weekly</option>
+              <option value="None">None</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="eventDate">Date</label>
+            <input id="eventDate" type="date" />
+          </div>
+          <div class="field">
+            <label for="eventTime">Time</label>
+            <input id="eventTime" type="time" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="eventMessage">Notes</label>
+          <textarea id="eventMessage" placeholder="Optional notes..."></textarea>
+        </div>
+
+        <div class="field">
+          <label style="display:flex; align-items:center; gap:8px;">
+            <input id="sendConfirmation" type="checkbox" checked style="width:auto;" />
+            Send event confirmation message
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="confirmationChannel">Send via</label>
+          <select id="confirmationChannel">
+            <option value="both">Both (Email + SMS)</option>
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+          </select>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="confirmEmail">Confirmation Email</label>
+            <input id="confirmEmail" type="email" placeholder="user@example.com" />
+          </div>
+          <div class="field">
+            <label for="confirmPhone">Confirmation Phone</label>
+            <input id="confirmPhone" type="tel" placeholder="+1234567890" />
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: -4px; color:#6b7890; font-size:12px;">
+          Enter email or phone (any one) for confirmation delivery.
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="muted-btn" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="save-btn">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const state = {
+      reminders: [],
+      upcoming: [],
+      editingId: null,
+      lastDelivery: {
+        dashboard: null,
+        sms: null,
+        message: 'Save an event to send an in-app dashboard alert and, when configured, an SMS notification.',
+      },
+      filters: {
+        query: '',
+        type: 'all',
+        status: 'all',
+      },
+      preferences: {
+        email_notifications: true,
+        sms_notifications: false,
+      }
+    };
+
+    const ICONS = {
+      yoga: '🧘',
+      steps: '👟',
+      fitness: '❤️',
+      meditation: '🫁',
+      wellness: '🥗',
+      default: '📅'
+    };
+
+    function go(path) {
+      window.location.href = path;
+    }
+
+    function toast(message, isError = false) {
+      const el = document.getElementById('toast');
+      el.textContent = message;
+      el.style.background = isError ? '#b42318' : '#1f2937';
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2600);
+    }
+
+    async function api(url, opts = {}) {
+      const res = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        ...opts,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Request failed');
+      }
+      return data;
+    }
+
+    function to12Hour(hhmm) {
+      if (!hhmm) return '--';
+      const [h, m] = hhmm.split(':').map(Number);
+      const suffix = h >= 12 ? 'PM' : 'AM';
+      const hour12 = ((h + 11) % 12) + 1;
+      return `${hour12}:${String(m).padStart(2, '0')} ${suffix}`;
+    }
+
+    function formatShortDate(iso) {
+      if (!iso) return '--';
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function normalizeRepeat(daysOfWeek) {
+      const days = (daysOfWeek || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (days.length >= 7) return 'Daily';
+      if (days.length === 1) return 'Weekly';
+      return 'None';
+    }
+
+    function repeatToDays(repeatChoice, selectedDate) {
+      if (repeatChoice === 'Daily') {
+        return 'Mon,Tue,Wed,Thu,Fri,Sat,Sun';
+      }
+      if (repeatChoice === 'Weekly') {
+        const date = selectedDate ? new Date(selectedDate) : new Date();
+        return date.toLocaleDateString('en-US', { weekday: 'short' });
+      }
+      const date = selectedDate ? new Date(selectedDate) : new Date();
+      return date.toLocaleDateString('en-US', { weekday: 'short' });
+    }
+
+    function upcomingForReminder(reminderId) {
+      return state.upcoming.find(item => item.id === reminderId) || null;
+    }
+
+    function upcomingLabel(hoursUntil) {
+      if (hoursUntil == null) return 'Not scheduled soon';
+      if (hoursUntil < 1) return `Upcoming in ${Math.max(1, Math.round(hoursUntil * 60))} min`;
+      if (hoursUntil < 24) return `Upcoming in ${Math.round(hoursUntil)} hours`;
+      return `Upcoming in ${Math.round(hoursUntil / 24)} days`;
+    }
+
+    function reminderIcon(type) {
+      return ICONS[type] || ICONS.default;
+    }
+
+    function getFilteredReminders() {
+      const query = state.filters.query.trim().toLowerCase();
+
+      return state.reminders.filter((reminder) => {
+        const title = String(reminder.title || '').toLowerCase();
+        const matchesQuery = !query || title.includes(query);
+        const matchesType = state.filters.type === 'all' || reminder.reminder_type === state.filters.type;
+        const matchesStatus =
+          state.filters.status === 'all' ||
+          (state.filters.status === 'enabled' && reminder.is_enabled) ||
+          (state.filters.status === 'disabled' && !reminder.is_enabled);
+
+        return matchesQuery && matchesType && matchesStatus;
+      });
+    }
+
+    function updateEventsCount(count) {
+      const countEl = document.getElementById('eventsCount');
+      if (!countEl) return;
+      countEl.textContent = `${count} event${count === 1 ? '' : 's'}`;
+    }
+
+    function updateSummary() {
+      const totalEl = document.getElementById('totalEvents');
+      const upcomingEl = document.getElementById('upcomingEvents');
+      const statusEl = document.getElementById('deliveryStatus');
+      const sidebarTotalEl = document.getElementById('sidebarTotalEvents');
+      const sidebarUpcomingEl = document.getElementById('sidebarUpcomingCount');
+      const sidebarDeliveryEl = document.getElementById('sidebarDeliveryCount');
+      const deliveredCount = (state.lastDelivery.dashboard ? 1 : 0) + (state.lastDelivery.sms ? 1 : 0);
+
+      if (totalEl) totalEl.textContent = String(state.reminders.length);
+      if (upcomingEl) upcomingEl.textContent = String(state.upcoming.length);
+      if (statusEl) {
+        statusEl.textContent = state.lastDelivery.dashboard || state.lastDelivery.sms ? 'Delivered' : 'Ready';
+      }
+      if (sidebarTotalEl) sidebarTotalEl.textContent = String(state.reminders.length);
+      if (sidebarUpcomingEl) sidebarUpcomingEl.textContent = String(state.upcoming.length);
+      if (sidebarDeliveryEl) sidebarDeliveryEl.textContent = String(deliveredCount);
+    }
+
+    function updateDeliveryPanel() {
+      const messageEl = document.getElementById('deliveryMessage');
+      const dashboardChip = document.getElementById('dashboardChip');
+      const smsChip = document.getElementById('smsChip');
+      const dashboard = !!state.lastDelivery.dashboard;
+      const sms = !!state.lastDelivery.sms;
+
+      if (messageEl) messageEl.textContent = state.lastDelivery.message;
+
+      if (dashboardChip) {
+        dashboardChip.textContent = dashboard ? 'Dashboard Delivered' : 'Dashboard Ready';
+        dashboardChip.className = `chip ${dashboard ? 'success' : 'neutral'}`;
+      }
+
+      if (smsChip) {
+        smsChip.textContent = sms ? 'SMS Sent' : 'SMS Pending';
+        smsChip.className = `chip ${sms ? 'success' : 'warn'}`;
+      }
+    }
+
+    function renderCards() {
+      const container = document.getElementById('cards');
+      const reminders = getFilteredReminders();
+      updateEventsCount(reminders.length);
+      updateSummary();
+
+      if (!reminders.length) {
+        container.innerHTML = '<div class="empty">No events yet. Click <b>＋ Add Event</b> to create your first reminder.</div>';
+        return;
+      }
+
+      container.innerHTML = reminders.map(reminder => {
+        const up = upcomingForReminder(reminder.id);
+        const nextDate = up ? formatShortDate(up.next_trigger) : formatShortDate(new Date().toISOString());
+        const timeText = to12Hour(reminder.reminder_time);
+        const repeat = normalizeRepeat(reminder.days_of_week);
+        const soonText = upcomingLabel(up ? up.hours_until : null);
+
+        return `
+          <article class="card gradient-card">
+            <div class="card-head">
+              <div class="event-main">
+                <div class="event-icon">${reminderIcon(reminder.reminder_type)}</div>
+                <div>
+                  <div class="event-title">${escapeHtml(reminder.title)}</div>
+                  <div class="event-meta">Date: ${nextDate}</div>
+                  <div class="event-meta">Time: ${timeText}</div>
+                  <div class="event-meta">Repeat: ${repeat}</div>
+                </div>
+              </div>
+              <div class="check" title="Enabled">${reminder.is_enabled ? '✓' : '•'}</div>
+            </div>
+
+            <div class="soon">${soonText}</div>
+
+            <div class="actions">
+              <button class="btn btn-edit" onclick="openEditModal(${reminder.id})">✏ Edit</button>
+              <button class="btn btn-delete" onclick="deleteReminder(${reminder.id})">🗑 Delete</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function setupFilterHandlers() {
+      const searchEl = document.getElementById('eventSearch');
+      const typeEl = document.getElementById('eventTypeFilter');
+      const statusEl = document.getElementById('eventStatusFilter');
+
+      if (searchEl) {
+        searchEl.addEventListener('input', (e) => {
+          state.filters.query = e.target.value || '';
+          renderCards();
+        });
+      }
+
+      if (typeEl) {
+        typeEl.addEventListener('change', (e) => {
+          state.filters.type = e.target.value || 'all';
+          renderCards();
+        });
+      }
+
+      if (statusEl) {
+        statusEl.addEventListener('change', (e) => {
+          state.filters.status = e.target.value || 'all';
+          renderCards();
+        });
+      }
+    }
+
+    function renderUpcoming() {
+      const container = document.getElementById('upcomingList');
+      if (!state.upcoming.length) {
+        container.innerHTML = '<div class="up-item"><div class="up-meta">No upcoming reminders.</div></div>';
+        return;
+      }
+
+      container.innerHTML = state.upcoming.slice(0, 4).map(item => {
+        const reminder = state.reminders.find(r => r.id === item.id);
+        const type = reminder?.reminder_type || 'default';
+        return `
+          <div class="up-item">
+            <div class="up-title">
+              <span class="icon-badge">${reminderIcon(type)}</span>
+              ${escapeHtml(item.title)}
+            </div>
+            <div class="up-meta">${new Date(item.next_trigger).toLocaleDateString(undefined, { weekday: 'long' })} • ${to12Hour(item.reminder_time)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTodayAgenda() {
+      const container = document.getElementById('todayAgenda');
+      if (!container) return;
+
+      const sortedAgenda = [...state.upcoming].sort((a, b) => {
+        const left = new Date(a.next_trigger || 0).getTime();
+        const right = new Date(b.next_trigger || 0).getTime();
+        return left - right;
+      }).slice(0, 4);
+
+      if (!sortedAgenda.length) {
+        container.innerHTML = '<div class="agenda-item"><div class="bullet"></div><div><div class="agenda-title">No agenda yet</div><div class="agenda-meta">Create an event to populate today\'s agenda.</div></div></div>';
+        return;
+      }
+
+      container.innerHTML = sortedAgenda.map(item => {
+        const reminder = state.reminders.find(r => r.id === item.id);
+        const type = reminder?.reminder_type || 'wellness';
+        const badge = reminder?.is_enabled ? 'Enabled' : 'Paused';
+        return `
+          <div class="agenda-item">
+            <div class="bullet" style="background:${reminder?.is_enabled ? '#31c58f' : '#f5a524'}; box-shadow:0 0 0 4px ${reminder?.is_enabled ? 'rgba(49,197,143,0.12)' : 'rgba(245,165,36,0.12)'};"></div>
+            <div>
+              <div class="agenda-title">${escapeHtml(item.title)}</div>
+              <div class="agenda-meta">${to12Hour(item.reminder_time)} • ${escapeHtml(type)} • ${badge}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCalendar() {
+      const monthLabel = document.getElementById('calendarMonth');
+      const datesEl = document.getElementById('calendarDates');
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+
+      monthLabel.textContent = now.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      let html = '';
+      for (let i = 0; i < firstDay; i++) {
+        html += '<button class="muted" disabled></button>';
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const cls = d === now.getDate() ? 'today' : '';
+        html += `<button class="${cls}">${d}</button>`;
+      }
+      datesEl.innerHTML = html;
+    }
+
+    function renderNotificationSettings() {
+      const emailEl = document.getElementById('emailNotify');
+      const smsEl = document.getElementById('smsNotify');
+      emailEl.checked = !!state.preferences.email_notifications;
+      smsEl.checked = !!state.preferences.sms_notifications;
+    }
+
+    async function loadNotificationSettings() {
+      try {
+        const data = await api('/api/auth/preferences');
+        const prefs = data.preferences || {};
+        state.preferences = {
+          ...state.preferences,
+          email_notifications: !!prefs.email_notifications,
+          sms_notifications: !!prefs.sms_notifications,
+        };
+        renderNotificationSettings();
+      } catch (e) {
+        toast('Could not load notification settings.', true);
+      }
+    }
+
+    async function saveNotificationSettings() {
+      const email_notifications = document.getElementById('emailNotify').checked;
+      const sms_notifications = document.getElementById('smsNotify').checked;
+
+      try {
+        await api('/api/auth/preferences', {
+          method: 'PUT',
+          body: JSON.stringify({ email_notifications, sms_notifications })
+        });
+        state.preferences.email_notifications = email_notifications;
+        state.preferences.sms_notifications = sms_notifications;
+        toast('Notification settings updated.');
+      } catch (e) {
+        toast(e.message || 'Failed to save settings.', true);
+      }
+    }
+
+    function openCreateModal() {
+      state.editingId = null;
+      document.getElementById('modalTitle').textContent = 'Add Event';
+      document.getElementById('eventForm').reset();
+      document.getElementById('eventTime').value = '07:00';
+      document.getElementById('eventDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('sendConfirmation').checked = false;
+      document.getElementById('confirmationChannel').value = 'both';
+      showModal();
+    }
+
+    function openEditModal(reminderId) {
+      const reminder = state.reminders.find(r => r.id === reminderId);
+      if (!reminder) return;
+
+      state.editingId = reminderId;
+      document.getElementById('modalTitle').textContent = 'Edit Event';
+      document.getElementById('eventTitle').value = reminder.title || '';
+      document.getElementById('eventType').value = reminder.reminder_type || 'wellness';
+      document.getElementById('eventRepeat').value = normalizeRepeat(reminder.days_of_week);
+      document.getElementById('eventDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('eventTime').value = reminder.reminder_time || '07:00';
+      document.getElementById('eventMessage').value = reminder.message || '';
+      document.getElementById('sendConfirmation').checked = false;
+      document.getElementById('confirmationChannel').value = 'both';
+      document.getElementById('confirmEmail').value = '';
+      document.getElementById('confirmPhone').value = '';
+      showModal();
+    }
+
+    function showModal() {
+      const modal = document.getElementById('eventModal');
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('eventModal');
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    async function saveEvent(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('eventTitle').value.trim();
+      const type = document.getElementById('eventType').value;
+      const repeat = document.getElementById('eventRepeat').value;
+      const date = document.getElementById('eventDate').value;
+      const time = document.getElementById('eventTime').value;
+      const message = document.getElementById('eventMessage').value.trim();
+      const sendConfirmation = document.getElementById('sendConfirmation').checked;
+      const confirmationChannel = document.getElementById('confirmationChannel').value;
+      const confirmationEmail = document.getElementById('confirmEmail').value.trim();
+      const confirmationPhone = document.getElementById('confirmPhone').value.trim();
+
+      if (!title || !time) {
+        toast('Title and time are required.', true);
+        return;
+      }
+
+      const payload = {
+        title,
+        reminder_type: type,
+        reminder_time: time,
+        days_of_week: repeatToDays(repeat, date),
+        message,
+        is_enabled: true,
+        send_confirmation: sendConfirmation,
+        confirmation_channel: confirmationChannel,
+        confirmation_email: confirmationEmail,
+        confirmation_phone: confirmationPhone,
+      };
+
+      try {
+        let responseData;
+        if (state.editingId) {
+          responseData = await api(`/api/events/reminders/${state.editingId}`, {
+            method: 'PUT',
+            body: JSON.stringify(payload)
+          });
+        } else {
+          responseData = await api('/api/events/reminders', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+        }
+
+        const notify = responseData?.confirmation_notification || {};
+        const emailStatus = notify.email ? 'Email ✅' : 'Email ❌';
+        const smsStatus = notify.sms ? 'SMS ✅' : 'SMS ❌';
+        const action = state.editingId ? 'updated' : 'created';
+        state.lastDelivery = {
+          dashboard: responseData?.dashboard_notification,
+          sms: responseData?.sms_notification,
+          message: `Event ${action}. ${emailStatus}, ${smsStatus}. Dashboard notification ${responseData?.dashboard_notification ? 'sent' : 'queued'}.`,
+        };
+        updateDeliveryPanel();
+        updateSummary();
+        toast(`Event ${action}. ${emailStatus}, ${smsStatus}`);
+
+        closeModal();
+        await loadAll();
+      } catch (e) {
+        toast(e.message || 'Failed to save event.', true);
+      }
+    }
+
+    async function deleteReminder(reminderId) {
+      const ok = window.confirm('Delete this event?');
+      if (!ok) return;
+
+      try {
+        await api(`/api/events/reminders/${reminderId}`, { method: 'DELETE' });
+        toast('Event deleted successfully.');
+        await loadAll();
+      } catch (e) {
+        toast(e.message || 'Failed to delete event.', true);
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    async function loadAll() {
+      try {
+        const [overview, upcomingRes] = await Promise.all([
+          api('/api/events/overview'),
+          api('/api/events/reminders/upcoming?hours=168')
+        ]);
+
+        state.reminders = overview.reminders || [];
+        state.upcoming = upcomingRes.upcoming || [];
+
+        renderCards();
+        renderUpcoming();
+        renderTodayAgenda();
+        updateSummary();
+        updateDeliveryPanel();
+      } catch (e) {
+        toast(e.message || 'Failed to load events.', true);
+      }
+    }
+
+    document.getElementById('eventModal').addEventListener('click', (e) => {
+      if (e.target.id === 'eventModal') {
+        closeModal();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      setupFilterHandlers();
+      renderCalendar();
+      updateSummary();
+      updateDeliveryPanel();
+      renderTodayAgenda();
+      await loadAll();
+      await loadNotificationSettings();
+    });
+  </script>
+</body>
+</html>
