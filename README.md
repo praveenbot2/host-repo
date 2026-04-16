@@ -116,7 +116,7 @@ cd smart_health-_monitor_system
 
 ### Step 2: Create Virtual Environment
 ```bash
-python -m venv venv
+py -3.13 -m venv .venv
 source .venv/Scripts/activate  # Windows Git Bash path for this repo's virtual environment
 ```
 
@@ -158,7 +158,28 @@ python -c "from app import create_app, db; app = create_app(); app.app_context()
 py -3.13 run.py
 ```
 
-The application will be available at `http://localhost:5000`
+The application will be available at `http://127.0.0.1:5000`.
+If port 5000 is busy, the app automatically falls back to `http://127.0.0.1:5050` (or `PORT_FALLBACK`).
+
+## Ready To Host
+
+This project is a Python Flask application (not a static site), so it is "ready to host" with runtime instructions rather than GitHub Pages.
+
+### Local Run (Verified)
+```bash
+py -3.13 -m venv .venv
+source .venv/Scripts/activate
+py -3.13 -m pip install -r requirements.txt
+py -3.13 run.py
+```
+
+### Environment-based host binding
+```bash
+PORT=5000
+PORT_FALLBACK=5050
+HOST=127.0.0.1
+FLASK_DEBUG=false
+```
 
 ## 🌐 Web Interface
 
